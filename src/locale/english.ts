@@ -79,7 +79,6 @@ const english: Record<string, string> = {
   _addTag: 'Add category',
   _addWeb: 'Add site',
   _clickEdit: 'Click Edit',
-  _importChrome: 'Import from Chrome bookmarks',
   _allContentMsg1:
     '1. After setting all data, click "synchronize to remote end" and drag the table to sort',
   _allContentMsg2: '2. Website category needs to be maintained manually,',
@@ -127,7 +126,7 @@ const english: Record<string, string> = {
   _tagSettings: 'Tag settings',
   _websiteMang: 'Website',
   _addRow: 'Add',
-  _bookImportTip: `<p>Supports most mainstream browsers based on the webkit kernel. If the import fails, it is temporarily not supported</p>`,
+  _bookImportTip: `<p>Supports most mainstream browsers. If the import fails, it is temporarily not supported</p>`,
   _engineName: 'Engine name',
   _status: 'Status',
   _isDisable: 'Disable',
@@ -200,8 +199,6 @@ const english: Record<string, string> = {
   _sidebarTitle: 'Sidebar title',
   _defTitle4: 'Default website title, recommended to be within 4 words',
   _inputAuthCode: 'Please enter the authorization code',
-  _payTip:
-    'Becoming a VIP allows you to enjoy the full site functionality, and you need to pay ¥99 as a contribution to the stable operation of this site. Thank you for your support',
   _waitHandle: 'Waiting for the stationmaster to handle',
   _collect: 'Get',
   _confirmCollect: 'Are you sure?',
@@ -224,6 +221,9 @@ const english: Record<string, string> = {
   _associatedLabels: 'Labels',
   _menuCollapse: 'Menu Collapse',
   _retro: 'Retro',
+  _accessTimeout: 'Access timeout (seconds)',
+  _accessTimeoutTip:
+    'Crawl the website for a specified number of seconds with no response, skip, The larger the number, the higher the success rate, but the slower it is',
 }
 
 export default english

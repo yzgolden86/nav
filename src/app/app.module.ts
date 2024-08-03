@@ -65,6 +65,7 @@ import SimComponent from '../view/sim/index.component'
 import SystemComponent from '../view/system/index.component'
 import SystemInfoComponent from '../view/system/info/index.component'
 import SystemBookmarkComponent from '../view/system/bookmark/index.component'
+import SystemBookmarkExportComponent from '../view/system/bookmark-export/index.component'
 import SystemAboutComponent from '../view/system/about/index.component'
 import SystemTagComponent from '../view/system/tag/index.component'
 import SystemSearchComponent from '../view/system/search/index.component'
@@ -78,6 +79,7 @@ import WebpComponent from '../view/app/default/app.component'
 import VipAuthComponent from '../view/system/vip-auth/index.component'
 
 import { SafeHtmlPipe } from 'src/pipe/safeHtml.pipe'
+import { ServiceCommonService } from 'src/services/common'
 
 import {
   CheckOutline,
@@ -115,6 +117,7 @@ const icons: IconDefinition[] = [
     SystemComponent,
     SystemInfoComponent,
     SystemBookmarkComponent,
+    SystemBookmarkExportComponent,
     SystemAboutComponent,
     SystemTagComponent,
     SystemSearchComponent,
@@ -176,7 +179,7 @@ const icons: IconDefinition[] = [
     BrowserModule,
     AppRoutingModule,
   ],
-  providers: [{ provide: NZ_I18N, useValue: zh_CN }],
+  providers: [{ provide: NZ_I18N, useValue: zh_CN }, ServiceCommonService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

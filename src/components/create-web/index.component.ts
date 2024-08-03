@@ -13,7 +13,7 @@ import {
 import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms'
 import { IWebProps } from 'src/types'
 import { NzMessageService } from 'ng-zorro-antd/message'
-import { createFile, saveUserCollect } from 'src/services'
+import { createFile, saveUserCollect } from 'src/api'
 import { $t } from 'src/locale'
 import { settings, websiteList, tagList, tagMap } from 'src/store'
 import event from 'src/utils/mitt'
@@ -30,7 +30,6 @@ export class CreateWebComponent {
   $t = $t
   isLogin: boolean = isLogin
   validateForm!: FormGroup
-  iconUrl = ''
   tagList = tagList
   uploading = false
   getting = false
@@ -110,13 +109,16 @@ export class CreateWebComponent {
     }
   }
 
+  get iconUrl() {
+    return this.validateForm.get('icon')?.value || ''
+  }
+
   onClose() {
     // @ts-ignore
     this.validateForm.get('urlArr').controls = []
     this.validateForm.reset()
     this.showModal = false
     this.detail = null
-    this.iconUrl = ''
     this.oneIndex = undefined
     this.twoIndex = undefined
     this.threeIndex = undefined
@@ -129,20 +131,26 @@ export class CreateWebComponent {
     if (!url) {
       return
     }
+    const iconVal = this.validateForm.get('icon')?.value
+    const titleVal = this.validateForm.get('title')?.value
+    const descVal = this.validateForm.get('desc')?.value
+    if (iconVal && titleVal && descVal) {
+      return
+    }
+
     this.getting = true
     const res = await getWebInfo(url)
-    if (res['url'] != null) {
-      this.iconUrl = res['url']
-      this.validateForm.get('icon')!.setValue(this.iconUrl)
+    if (res['url'] != null && !iconVal) {
+      this.validateForm.get('icon')!.setValue(res['url'])
     }
-    if (res['title'] != null) {
+    if (res['title'] != null && !titleVal) {
       this.validateForm.get('title')!.setValue(res['title'])
     }
-    if (res['description'] != null) {
+    if (res['description'] != null && !descVal) {
       this.validateForm.get('desc')!.setValue(res['description'])
     }
     if (res['status'] === false) {
-      this.message.error('自动抓取失败，请手动写入')
+      this.message.error(`自动抓取失败，请手动填写：${res['message']}`)
     }
     this.getting = false
   }
@@ -169,7 +177,7 @@ export class CreateWebComponent {
     fileReader.readAsDataURL(file)
     fileReader.onload = function () {
       that.uploading = true
-      that.iconUrl = this.result as string
+      that.validateForm.get('icon')!.setValue(this.result)
       const url = that.iconUrl.split(',')[1]
       const path = `nav-${Date.now()}-${file.name}`
 
@@ -237,14 +245,7 @@ export class CreateWebComponent {
     }
 
     if (this.detail) {
-      const ok = updateByWeb(
-        {
-          ...this.detail,
-          name: getTextContent(this.detail.name),
-          desc: getTextContent(this.detail.desc),
-        },
-        payload as IWebProps
-      )
+      const ok = updateByWeb(this.detail, payload as IWebProps)
       if (ok) {
         this.message.success($t('_modifySuccess'))
       } else {
@@ -257,10 +258,6 @@ export class CreateWebComponent {
         const twoIndex = this.twoIndex ?? id
         const threeIndex = this.threeIndex as number
         const w = websiteList[oneIndex].nav[twoIndex].nav[threeIndex].nav
-        const exists = w.some((item: any) => item.name === payload.name)
-        if (exists) {
-          return this.message.error(`${$t('_repeatAdd')} "${payload.name}"`)
-        }
         this.uploading = true
         if (this.isLogin) {
           w.unshift(payload as IWebProps)

@@ -10,17 +10,17 @@ const internalPath = path.join('.', 'data', 'internal.json')
 const settingsPath = path.join('.', 'data', 'settings.json')
 const tagPath = path.join('.', 'data', 'tag.json')
 
-let internal, db, settings, tags
+let internal = {}
+let db = []
+let settings = {}
+let tags = []
 try {
-  internal = JSON.parse(fs.readFileSync(internalPath).toString())
-  db = JSON.parse(fs.readFileSync(dbPath).toString())
-  settings = JSON.parse(fs.readFileSync(settingsPath).toString())
-  tags = JSON.parse(fs.readFileSync(tagPath).toString())
+  internal = JSON.parse(fs.readFileSync(internalPath).toString() || '{}')
+  db = JSON.parse(fs.readFileSync(dbPath).toString() || '[]')
+  settings = JSON.parse(fs.readFileSync(settingsPath).toString() || '{}')
+  tags = JSON.parse(fs.readFileSync(tagPath).toString() || '[]')
 } catch (error) {
-  internal = {}
-  db = []
-  settings = {}
-  tags = []
+  console.log('parse JSON: ', error.message)
 }
 
 const TAG_ID1 = -1
@@ -191,7 +191,9 @@ const TAG_ID_NAME3 = 'Github'
   settings.spiderIcon ??= 'NO'
   settings.spiderDescription ??= 'NO'
   settings.spiderTitle ??= 'NO'
-  settings.spiderQty ??= 20
+  settings.spiderQty ??= 200
+  settings.spiderTimeout ??= 3
+  settings.spiderTimeout = Number(settings.spiderTimeout) || 3
   settings.loadingCode ??= ''
 
   settings.appCardStyle ??= 'common'
@@ -249,10 +251,6 @@ export function getWebCount(websiteList) {
 const { userViewCount, loginViewCount } = getWebCount(db)
 internal.userViewCount = userViewCount < 0 ? loginViewCount : userViewCount
 internal.loginViewCount = loginViewCount
-console.log(`
-userViewCount: ${internal.userViewCount}
-loginViewCount: ${internal.loginViewCount}
-`)
 fs.writeFileSync(internalPath, JSON.stringify(internal), { encoding: 'utf-8' })
 
 // 设置网站的面包屑类目显示

@@ -15,7 +15,7 @@ import * as s from '../../data/search.json'
 import { STORAGE_KEY_MAP } from 'src/constants'
 import { isLogin } from './user'
 import { SearchType } from 'src/components/search-engine/index'
-import { getIconUrl } from 'src/services'
+import { getIconUrl } from 'src/api'
 import localforage from 'localforage'
 import event from 'src/utils/mitt'
 
@@ -278,6 +278,18 @@ export function adapterWebsiteList(websiteList: any[]) {
     })
     event.emit('WEB_FINISH')
     window.__FINISHED__ = true
+    if (isLogin) {
+      setTimeout(() => {
+        event.emit('NOTIFICATION', {
+          type: 'success',
+          title: '构建完成',
+          content: date,
+          config: {
+            nzDuration: 0,
+          },
+        })
+      }, 1000)
+    }
     return
   }
 
@@ -514,20 +526,6 @@ export function getOverIndex(selector: string): number {
     }
   }
   return overIndex
-}
-
-export function downloadAsFile(str: string, fileName: string) {
-  const blob = new Blob([str], { type: 'text/html' })
-  const url = URL.createObjectURL(blob)
-
-  const a = document.createElement('a')
-  a.href = url
-  a.download = fileName
-  document.body.appendChild(a)
-  a.click()
-
-  document.body.removeChild(a)
-  URL.revokeObjectURL(url)
 }
 
 export function isMobile() {

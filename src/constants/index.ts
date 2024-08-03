@@ -10,7 +10,7 @@ export const SETTING_PATH = 'data/settings.json'
 
 export const SEARCH_PATH = 'data/search.json'
 
-export const VERSION = '8.6.0'
+export const VERSION = '8.6.1'
 
 export const STORAGE_KEY_MAP = {
   token: 'token',
@@ -22,4 +22,5 @@ export const STORAGE_KEY_MAP = {
   language: 'language',
   total: 'total',
   authCode: 'AUTH_CODE',
+  sideCollapsed: 'SIDE_COLLAPSED',
 }
